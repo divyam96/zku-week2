@@ -11,10 +11,25 @@ contract MerkleTree is Verifier {
 
     constructor() {
         // [assignment] initialize a Merkle tree of 8 with blank leaves
+        uint i;
+        for (i=0; i<8; i++){
+          hashes.push(0);
+        }
     }
+
+
+// 0 1 2 3 5 6 7   8 9 10 11    12 13    14
 
     function insertLeaf(uint256 hashedLeaf) public returns (uint256) {
         // [assignment] insert a hashed leaf into the Merkle tree
+        hashes[index] = hashedLeaf;
+        index++;
+        uint i;
+        for(i=0; i<7; i++){
+          hashes.push(PoseidonT3.poseidon([hashes[2*i],hashes[(2*i)+1]]));
+        }
+
+        return hashes[14];
     }
 
     function verify(
@@ -24,6 +39,7 @@ contract MerkleTree is Verifier {
             uint[1] memory input
         ) public view returns (bool) {
 
-        // [assignment] verify an inclusion proof and check that the proof root matches current root
+        // [assignment] verify an inclusion proof and check that the proof root matches current
+        return verifyProof(a,b,c, input);
     }
 }
